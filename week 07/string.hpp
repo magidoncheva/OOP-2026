@@ -26,37 +26,35 @@ class String {
 
     size_t length() const;
     bool isEmpty() const;
-    void print() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const String& obj); 
+    friend std::istream& operator>>(std::istream& is, String& obj); 
+
+
+    void serialize(std::ostream& os) const;
+    void deserialize(std::istream& is);
 };
 
+
 String::String() {
-    std::cout << "Default" << std::endl;
     str = new char[1];
     str[0] = '\0';
 }
 
 String::String(const char* str) {
-    std::cout << "Init" << std::endl;
-
     set(str);
 }
 
 String::String(const String& other) {
-    std::cout << "Copy" << std::endl;
-
     set(other.str);
 }
 
 String::String(String&& other) {
-    std::cout << "Move" << std::endl;
-
     this->str = other.str;
     other.str = 0;
 }
 
 String& String::operator=(const String& other) {
-    std::cout << "=" << std::endl;
-
     if (this != &other) {
         delete[] this->str;
         set(other.str);
@@ -65,8 +63,6 @@ String& String::operator=(const String& other) {
 }
 
 String& String::operator=(const char* other) {
-    std::cout << "= char" << std::endl;
-
     delete[] this->str;
     set(other);
     
@@ -74,8 +70,6 @@ String& String::operator=(const char* other) {
 }
 
 String& String::operator=(String&& other) {
-    std::cout << "= move" << std::endl;
-
     if (this != &other) {
         delete[] this->str;
         this->str = other.str;
@@ -85,8 +79,6 @@ String& String::operator=(String&& other) {
 }
 
 String::~String() {
-    std::cout << "Delete" << std::endl;
-
     delete[] str;
 }
 
@@ -121,8 +113,36 @@ bool String::isEmpty() const {
     return str == nullptr || length() == 0;
 }
 
-void String::print() const {
-    std::cout << str << std::endl;
+std::ostream& operator<<(std::ostream& os, const String& obj) {
+    os << obj.str;
+
+    return os;
+}
+
+std::istream& operator>>(std::istream& is, String& obj) {
+    size_t size;
+    is >> size;
+    is.ignore();
+    
+    delete[] obj.str;
+    obj.str = new char[size];
+    is.getline(obj.str, size);
+
+    return is;
+}
+
+void String::serialize(std::ostream& os) const {
+    os << length() << std::endl;
+    os << str << std::endl;
+}
+
+void String::deserialize(std::istream& is) {
+    size_t size;
+    is >> size;
+    is.ignore();
+    char str[size + 1];
+    is.getline(str, size + 1);
+    operator=(str);
 }
 
 #endif
