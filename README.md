@@ -16,6 +16,7 @@
 11. [Абстракти класове. Полиморфизъм]()
 12. [Упражнение](https://classroom.github.com/a/gW3eQb7e)
 13. [Диамантен проблем](https://classroom.github.com/a/gW3eQb7e)
+14. [Статични компоненти]()
 
 
 ### Style Guide 
